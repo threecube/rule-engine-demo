@@ -1,0 +1,61 @@
+package com.threecube.stream
+
+//导入自定义的实体类
+import com.threecube.test.droolsEngine.model.ChatMessageModel
+import java.util.HashMap
+import java.util.Map
+import java.util.ArrayList
+import java.util.List
+import java.lang.String
+
+global com.threecube.test.droolsEngine.service.ChatMsgRuleEngine chatMsgRuleEngine
+
+declare Today
+  @role(event)
+  @expires(24h)
+end
+
+// 定义ChatMessageModel为drools事件类型
+declare ChatMessageModel
+  @role(event)
+  @timestamp(sendtime)
+end
+
+//流量峰值检测，30s内流量超过200进行报警
+rule "Flow_spines_firewall"
+	no-loop
+	auto-focus false
+	when
+		$msgCount : Number(intValue > 100) from accumulate($model : ChatMessageModel(msgtype == "1", $value : value) over window:time(30s),
+		count(1)
+		);
+	then
+ 		chatMsgRuleEngine.alarm(String.format("报警触发：单位时间内的消息量为%s, 已经超过预警值", $msgCount));
+	end
+	
+rule "SENDER_MSG_COUNT"
+	when
+		$mapResult: HashMap() from accumulate($model : ChatMessageModel(msgtype == "1", $sender : sender) over window:time(30s),
+		init( Map senderMap = new HashMap(); ),
+		action(
+			Integer count = 0;
+            if (senderMap.get($sender) != null) {
+            	count = (Integer)senderMap.get($sender);
+            }
+            count ++;
+            senderMap.put($sender, count); 
+        ),
+        reverse(
+        	Integer count = (Integer)senderMap.get($sender);
+        	count --;
+        	senderMap.put($sender, count);
+            
+        ),
+        result( senderMap )
+		);
+	then
+		chatMsgRuleEngine.statProcess($mapResult);
+	end
+//query "CaseStatResQuery"
+// $caseReminder : TransientReminder(reminderTypeCd == "CaseReminder")
+//end

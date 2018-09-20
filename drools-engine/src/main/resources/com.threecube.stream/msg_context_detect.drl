@@ -1,0 +1,17 @@
+package com.threecube.stream
+
+//导入自定义的实体类
+import com.threecube.test.droolsEngine.model.ChatMessageModel
+
+global com.threecube.test.droolsEngine.service.ChatMsgRuleEngine chatMsgRuleEngine
+
+rule "GIVEN_KEYWORD_COUNT"
+	dialect "java"
+	when
+ 		$msgCount : Number(intValue > 15) from accumulate($model : ChatMessageModel(msgtype == "1", body contains "fucker") over window:time(30s),
+		count(1)
+		);
+	then
+ 		chatMsgRuleEngine.alarm(String.format("报警触发：单位时间内的包含敏感词的消息量为%s, 已经超过预警值", $msgCount));
+	end
+	

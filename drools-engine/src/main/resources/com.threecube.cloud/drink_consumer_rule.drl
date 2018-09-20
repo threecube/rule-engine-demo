@@ -1,0 +1,40 @@
+package com.threecube.cloud
+
+//导入自定义的实体类
+import com.threecube.test.droolsEngine.model.DrinkConsumerModel;
+global com.threecube.test.droolsEngine.service.DrinkConsumerService drinkConsumerService;
+
+// 使用1元钱，买一瓶饮料
+rule "Drink_when_have_money"
+	salience 10
+	when
+ 		$dc : DrinkConsumerModel(remainMoney > 0);
+	then
+ 		drinkConsumerService.updateAfterBuy($dc, 1);
+	end
+
+// 每当消费10瓶，奖励1瓶
+rule "Reward_when_10_consumer"
+	salience 11
+	when
+ 		$dc : DrinkConsumerModel((consumedNum - rewardNum * 10) >= 10)
+	then
+ 		drinkConsumerService.updateAfterReward($dc, 1);
+	end
+
+// 使用两个空瓶换一元钱
+rule "Exchange_using_empty_bottle"
+	salience 5
+	when
+ 		$dc : DrinkConsumerModel( emptyBottleNum >= 2);
+	then
+ 		drinkConsumerService.updateAfterExchange($dc, 1);
+	end
+	
+rule "Print_drink_num"
+	salience 1
+	when
+ 		$dc : DrinkConsumerModel();
+	then
+		drinkConsumerService.postProcess($dc);
+	end
