@@ -1,4 +1,4 @@
-package com.threecube.cloud
+package com.threecube.cloud.xls
 
 //导入自定义的实体类
 import com.threecube.test.droolsEngine.model.DrinkConsumerModel;

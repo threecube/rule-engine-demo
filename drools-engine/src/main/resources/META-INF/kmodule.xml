@@ -8,4 +8,9 @@
 	<kbase name="rules_cloud"  packages="com.threecube.cloud">
 		<ksession name="ksession-cloud-rules"/>
 	</kbase>
+	
+	<kbase name="rules_cloud_xls"  packages="com.threecube.cloud.xls">
+		<ksession name="ksession-cloudxls-rules"/>
+	</kbase>
+	
 </kmodule>

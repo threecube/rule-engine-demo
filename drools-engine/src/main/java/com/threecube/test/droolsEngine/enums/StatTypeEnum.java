@@ -3,6 +3,8 @@
  */
 package com.threecube.test.droolsEngine.enums;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 统计类型
  * 

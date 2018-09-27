@@ -10,6 +10,7 @@ import org.kie.api.runtime.KieSession;
 
 import com.threecube.test.droolsEngine.service.impl.ChatMsgRuleEngineImpl;
 import com.threecube.test.droolsEngine.service.impl.DrinkConsumerServiceImpl;
+import com.threecube.test.droolsEngine.service.impl.InsuredPlanServiceImpl;
 
 /**
  * @author dingwenbin
@@ -26,6 +27,8 @@ public class DroolsManageUtil {
 	public static KieSession drinkKieSession = null;
 	
 	public static KieSession chatKieSession = null;
+	
+	public static KieSession insuredKieSession = null;
 		
 	static {
 		
@@ -59,6 +62,9 @@ public class DroolsManageUtil {
 		
 		chatKieSession = kieContainer.newKieSession("ksession-stream-rules");
 		chatKieSession.setGlobal("chatMsgRuleEngine", new ChatMsgRuleEngineImpl());
+		
+		insuredKieSession = kieContainer.newKieSession("ksession-cloudxls-rules");
+		insuredKieSession.setGlobal("insuredPlanService", new InsuredPlanServiceImpl());
 	}
 
 	/**
