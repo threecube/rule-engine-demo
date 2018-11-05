@@ -23,12 +23,12 @@ public class InsuredPlanServiceImpl implements InsuredPlanService {
 		
 		FactHandle factHandle = DroolsManageUtil.insuredKieSession.getFactHandle(insuredPersion);
 		
-		System.out.println(String.format("报销人员%s的报表比例为%s, 开始计算金额", insuredPersion.getId(), ratio));
+		System.out.println("开始计算报销金额");
 		double insuredValue = insuredPersion.getCost() * ratio;
 		insuredPersion.setInsuranceValue(insuredValue);
 		insuredPersion.setInsuredRatio(ratio);
 		
-		System.out.println(String.format("报销金额为: %s", insuredPersion.getInsuranceValue()));
+		DroolsManageUtil.insuredKieSession.update(factHandle, insuredPersion);
 	}
 
 }

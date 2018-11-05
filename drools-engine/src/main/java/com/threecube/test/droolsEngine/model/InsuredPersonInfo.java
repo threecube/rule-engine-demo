@@ -137,6 +137,7 @@ public class InsuredPersonInfo implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("报销人员所属地区：%s, 就诊医院类别：%s, 开销： %s", zoneType.getName(), hospital.getLevel(), cost);
+		return String.format("报销人员所属地区:%s, 就诊医院类别:%s, 开销:%s, 报销比例:%s, 报销金额:%s", 
+				zoneType.getName(), hospital.getLevel(), cost, insuredRatio, insuranceValue);
 	}
 }
